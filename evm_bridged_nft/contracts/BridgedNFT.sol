@@ -32,10 +32,11 @@ contract BridgedNFT is ERC721Upgradeable {
     /// inherited from the ERC721Upgradeable then pass _recipient and _tokenId.
     /// @param _tokenId nft token id.
     /// @param _recipient owner of the nft.
-    /// @param _uri setting token URI using token id and URI of JSON file.
-    function mintNFT(uint256 _tokenId, address _recipient, string _uri) external {
+    /// _uri setting token URI using token id and URI of JSON file.
+    function mintNFT(uint256 _tokenId, address _recipient) external {
         require(!_exists(_tokenId), "token id must exist");
         super._mint(_recipient, _tokenId);
+        string _uri = tokenURI(_tokenId);
         super._setTokenURI(_tokenId, _uri);
     }
 
