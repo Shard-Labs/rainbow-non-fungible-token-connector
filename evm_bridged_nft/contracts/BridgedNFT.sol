@@ -28,13 +28,13 @@ contract BridgedNFT is ERC721Upgradeable {
 
     /// @notice This function should only be called from the factory, it allows to mint a
     /// new nft token
-    /// @dev check if the token id exists, then mint a new one by calling _mint function
+    /// @dev check if the token id does not exists, then mint a new one by calling _mint function
     /// inherited from the ERC721Upgradeable then pass _recipient and _tokenId.
     /// @param _tokenId nft token id.
     /// @param _recipient owner of the nft.
     /// @param _uri setting token URI using token id and URI of JSON file.
     function mintNFT(uint256 _tokenId, address _recipient, string _uri) external {
-        require(_exists(_tokenId));
+        require(!_exists(_tokenId), "token id must exist");
         super._mint(_recipient, _tokenId);
         super._setTokenURI(_tokenId, _uri);
     }
