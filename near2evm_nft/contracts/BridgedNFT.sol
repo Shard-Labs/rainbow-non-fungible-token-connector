@@ -33,7 +33,7 @@ contract BridgedNFT is ERC721BurnableUpgradeable {
     /// @param _tokenId nft token id.
     /// @param _recipient owner of the nft.
     function mintNFT(uint256 _tokenId, address _recipient) external {
-        require(msg.sender = BridgedNFT.bridgeFactory.address, 'Only Factory can mint');
+        require(msg.sender = BridgedNFT.bridgeFactory, 'Only Factory can mint');
         _mint(_recipient, _tokenId);
     }
 
