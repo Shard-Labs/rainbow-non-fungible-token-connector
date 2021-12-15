@@ -67,14 +67,16 @@ contract NFTFactory {
         );
         uint256 tokenId = stringToUint(tokenIdAsString);
 
-        //TODO: check if the contract was already deployed add added to "bridgedNFTs" mapping
+        //check if the contract was already deployed add added to "bridgedNFTs" mapping
         // accountID: the near contract name "NFT"
+        address add = bridgedNFTs[accountID];
+        require(add != address(0), 'Contract not deployed');
 
-
-        // TODO: call the spécific Bridged contract and mint new Token using
+        //call the spécific Bridged contract and mint new Token using
         // recipient: the eth account that will receive the token
         // accountID: the near contract name "NFT"
         // tokenID: uint256
+        BridgedNFT.mintNFT(tokenId, recipient);
     }
 
     function _parseAndConsumeProof(
