@@ -5,8 +5,9 @@ import "hardhat/console.sol";
 import "rainbow-bridge/contracts/eth/nearprover/contracts/ProofDecoder.sol";
 import "rainbow-bridge/contracts/eth/nearprover/contracts/INearProver.sol";
 import "./BridgedNFT.sol";
+import { AdminControlled } from "rainbow-bridge/contracts/eth/nearbridge/contracts/AdminControlled.sol";
 
-contract NFTFactory {
+contract NFTFactory is AdminControlled {
     using Borsh for Borsh.Data;
     using ProofDecoder for Borsh.Data;
 
@@ -18,6 +19,8 @@ contract NFTFactory {
 
     /// @notice the near prover address.
     INearProver public nearProver;
+
+    uint constant PAUSE_TRANSFER_TO_ETH = 1 << 1;
 
     /// @notice the near prover address.
     bytes public nearLocker;
@@ -31,8 +34,10 @@ contract NFTFactory {
     constructor(
         INearProver _nearProver,
         bytes memory _nearLocker,
-        uint64 _minBlockAcceptanceHeight
+        uint64 _minBlockAcceptanceHeight,
+        uint256 _pausedFlags
     ) {
+        __AdminControlled_init(PAUSE_TRANSFER_TO_ETH);
         nearProver = _nearProver;
         minBlockAcceptanceHeight = _minBlockAcceptanceHeight;
         nearLocker = _nearLocker;
@@ -45,7 +50,7 @@ contract NFTFactory {
     function finaliseNearToEthTransfer(
         bytes calldata _proofData,
         uint64 _proofBlockHeader
-    ) external {
+    ) pausable(PAUSE_TRANSFER_TO_ETH) external {
         ProofDecoder.ExecutionStatus memory status = _parseAndConsumeProof(
             _proofData,
             _proofBlockHeader
