@@ -53,6 +53,7 @@ describe("NodeOperator", function () {
     NFTFactoryContract = (await nftFactoryArtifact.deploy(
       NearMockContract.address,
       Buffer.from("nearnonfuntoken", "utf-8"),
+      0,
       0
     )) as NFTFactory;
   });
