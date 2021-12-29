@@ -73,11 +73,16 @@ contract NFTFactory is AdminControlled {
             Borsh.decodeBytes(borshDataFromProof)
         );
         uint256 tokenId = stringToUint(tokenIdAsString);
-
+        string memory nft_name = string(
+            Borsh.decodeBytes(borshDataFromProof)
+        );
+        string memory nft_symbol = string(
+            Borsh.decodeBytes(borshDataFromProof)
+        );
         // mint new nft
         address erc721Address = bridgedNFTs[accountID];
         require(erc721Address != address(0), "Contract not deployed");
-        BridgedNFT(erc721Address).mintNFT(tokenId, recipient);
+        BridgedNFT(erc721Address, nft_name, nft_symbol).mintNFT(tokenId, recipient);
     }
 
     function _parseAndConsumeProof(
